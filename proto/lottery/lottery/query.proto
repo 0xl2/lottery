@@ -6,6 +6,7 @@ import "google/api/annotations.proto";
 import "cosmos/base/query/v1beta1/pagination.proto";
 import "lottery/lottery/params.proto";
 import "lottery/lottery/lottery_info.proto";
+import "lottery/lottery/stored_lottery.proto";
 // this line is used by starport scaffolding # 1
 
 option go_package = "github.com/naruto0913/lottery/x/lottery/types";
@@ -20,6 +21,16 @@ service Query {
 	rpc LotteryInfo(QueryGetLotteryInfoRequest) returns (QueryGetLotteryInfoResponse) {
 		option (google.api.http).get = "/naruto0913/lottery/lottery/lottery_info";
 	}
+// Queries a StoredLottery by index.
+	rpc StoredLottery(QueryGetStoredLotteryRequest) returns (QueryGetStoredLotteryResponse) {
+		option (google.api.http).get = "/naruto0913/lottery/lottery/stored_lottery/{index}";
+	}
+
+	// Queries a list of StoredLottery items.
+	rpc StoredLotteryAll(QueryAllStoredLotteryRequest) returns (QueryAllStoredLotteryResponse) {
+		option (google.api.http).get = "/naruto0913/lottery/lottery/stored_lottery";
+	}
+
 // this line is used by starport scaffolding # 2
 }
 
@@ -37,4 +48,22 @@ message QueryGetLotteryInfoRequest {}
 message QueryGetLotteryInfoResponse {
 	LotteryInfo LotteryInfo = 1 [(gogoproto.nullable) = false];
 }
+message QueryGetStoredLotteryRequest {
+	  string index = 1;
+
+}
+
+message QueryGetStoredLotteryResponse {
+	StoredLottery storedLottery = 1 [(gogoproto.nullable) = false];
+}
+
+message QueryAllStoredLotteryRequest {
+	cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+message QueryAllStoredLotteryResponse {
+	repeated StoredLottery storedLottery = 1 [(gogoproto.nullable) = false];
+	cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
 // this line is used by starport scaffolding # 3

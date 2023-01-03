@@ -2,20 +2,22 @@
 import _m0 from "protobufjs/minimal";
 import { LotteryInfo } from "./lottery_info";
 import { Params } from "./params";
+import { StoredLottery } from "./stored_lottery";
 
 export const protobufPackage = "naruto0913.lottery.lottery";
 
 /** GenesisState defines the lottery module's genesis state. */
 export interface GenesisState {
-  params:
-    | Params
+  params: Params | undefined;
+  lotteryInfo:
+    | LotteryInfo
     | undefined;
   /** this line is used by starport scaffolding # genesis/proto/state */
-  lotteryInfo: LotteryInfo | undefined;
+  storedLotteryList: StoredLottery[];
 }
 
 function createBaseGenesisState(): GenesisState {
-  return { params: undefined, lotteryInfo: undefined };
+  return { params: undefined, lotteryInfo: undefined, storedLotteryList: [] };
 }
 
 export const GenesisState = {
@@ -25,6 +27,9 @@ export const GenesisState = {
     }
     if (message.lotteryInfo !== undefined) {
       LotteryInfo.encode(message.lotteryInfo, writer.uint32(18).fork()).ldelim();
+    }
+    for (const v of message.storedLotteryList) {
+      StoredLottery.encode(v!, writer.uint32(26).fork()).ldelim();
     }
     return writer;
   },
@@ -42,6 +47,9 @@ export const GenesisState = {
         case 2:
           message.lotteryInfo = LotteryInfo.decode(reader, reader.uint32());
           break;
+        case 3:
+          message.storedLotteryList.push(StoredLottery.decode(reader, reader.uint32()));
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -54,6 +62,9 @@ export const GenesisState = {
     return {
       params: isSet(object.params) ? Params.fromJSON(object.params) : undefined,
       lotteryInfo: isSet(object.lotteryInfo) ? LotteryInfo.fromJSON(object.lotteryInfo) : undefined,
+      storedLotteryList: Array.isArray(object?.storedLotteryList)
+        ? object.storedLotteryList.map((e: any) => StoredLottery.fromJSON(e))
+        : [],
     };
   },
 
@@ -62,6 +73,11 @@ export const GenesisState = {
     message.params !== undefined && (obj.params = message.params ? Params.toJSON(message.params) : undefined);
     message.lotteryInfo !== undefined
       && (obj.lotteryInfo = message.lotteryInfo ? LotteryInfo.toJSON(message.lotteryInfo) : undefined);
+    if (message.storedLotteryList) {
+      obj.storedLotteryList = message.storedLotteryList.map((e) => e ? StoredLottery.toJSON(e) : undefined);
+    } else {
+      obj.storedLotteryList = [];
+    }
     return obj;
   },
 
@@ -73,6 +89,7 @@ export const GenesisState = {
     message.lotteryInfo = (object.lotteryInfo !== undefined && object.lotteryInfo !== null)
       ? LotteryInfo.fromPartial(object.lotteryInfo)
       : undefined;
+    message.storedLotteryList = object.storedLotteryList?.map((e) => StoredLottery.fromPartial(e)) || [];
     return message;
   },
 };

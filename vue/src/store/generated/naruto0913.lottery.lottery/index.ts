@@ -2,9 +2,10 @@ import { Client, registry, MissingWalletError } from 'naruto0913-lottery-client-
 
 import { LotteryInfo } from "naruto0913-lottery-client-ts/naruto0913.lottery.lottery/types"
 import { Params } from "naruto0913-lottery-client-ts/naruto0913.lottery.lottery/types"
+import { StoredLottery } from "naruto0913-lottery-client-ts/naruto0913.lottery.lottery/types"
 
 
-export { LotteryInfo, Params };
+export { LotteryInfo, Params, StoredLottery };
 
 function initClient(vuexGetters) {
 	return new Client(vuexGetters['common/env/getEnv'], vuexGetters['common/wallet/signer'])
@@ -37,10 +38,13 @@ const getDefaultState = () => {
 	return {
 				Params: {},
 				LotteryInfo: {},
+				StoredLottery: {},
+				StoredLotteryAll: {},
 				
 				_Structure: {
 						LotteryInfo: getStructure(LotteryInfo.fromPartial({})),
 						Params: getStructure(Params.fromPartial({})),
+						StoredLottery: getStructure(StoredLottery.fromPartial({})),
 						
 		},
 		_Registry: registry,
@@ -80,6 +84,18 @@ export default {
 						(<any> params).query=null
 					}
 			return state.LotteryInfo[JSON.stringify(params)] ?? {}
+		},
+				getStoredLottery: (state) => (params = { params: {}}) => {
+					if (!(<any> params).query) {
+						(<any> params).query=null
+					}
+			return state.StoredLottery[JSON.stringify(params)] ?? {}
+		},
+				getStoredLotteryAll: (state) => (params = { params: {}}) => {
+					if (!(<any> params).query) {
+						(<any> params).query=null
+					}
+			return state.StoredLotteryAll[JSON.stringify(params)] ?? {}
 		},
 				
 		getTypeStructure: (state) => (type) => {
@@ -154,6 +170,54 @@ export default {
 				return getters['getLotteryInfo']( { params: {...key}, query}) ?? {}
 			} catch (e) {
 				throw new Error('QueryClient:QueryLotteryInfo API Node Unavailable. Could not perform query: ' + e.message)
+				
+			}
+		},
+		
+		
+		
+		
+		 		
+		
+		
+		async QueryStoredLottery({ commit, rootGetters, getters }, { options: { subscribe, all} = { subscribe:false, all:false}, params, query=null }) {
+			try {
+				const key = params ?? {};
+				const client = initClient(rootGetters);
+				let value= (await client.Naruto0913LotteryLottery.query.queryStoredLottery( key.index)).data
+				
+					
+				commit('QUERY', { query: 'StoredLottery', key: { params: {...key}, query}, value })
+				if (subscribe) commit('SUBSCRIBE', { action: 'QueryStoredLottery', payload: { options: { all }, params: {...key},query }})
+				return getters['getStoredLottery']( { params: {...key}, query}) ?? {}
+			} catch (e) {
+				throw new Error('QueryClient:QueryStoredLottery API Node Unavailable. Could not perform query: ' + e.message)
+				
+			}
+		},
+		
+		
+		
+		
+		 		
+		
+		
+		async QueryStoredLotteryAll({ commit, rootGetters, getters }, { options: { subscribe, all} = { subscribe:false, all:false}, params, query=null }) {
+			try {
+				const key = params ?? {};
+				const client = initClient(rootGetters);
+				let value= (await client.Naruto0913LotteryLottery.query.queryStoredLotteryAll(query ?? undefined)).data
+				
+					
+				while (all && (<any> value).pagination && (<any> value).pagination.next_key!=null) {
+					let next_values=(await client.Naruto0913LotteryLottery.query.queryStoredLotteryAll({...query ?? {}, 'pagination.key':(<any> value).pagination.next_key} as any)).data
+					value = mergeResults(value, next_values);
+				}
+				commit('QUERY', { query: 'StoredLotteryAll', key: { params: {...key}, query}, value })
+				if (subscribe) commit('SUBSCRIBE', { action: 'QueryStoredLotteryAll', payload: { options: { all }, params: {...key},query }})
+				return getters['getStoredLotteryAll']( { params: {...key}, query}) ?? {}
+			} catch (e) {
+				throw new Error('QueryClient:QueryStoredLotteryAll API Node Unavailable. Could not perform query: ' + e.message)
 				
 			}
 		},
