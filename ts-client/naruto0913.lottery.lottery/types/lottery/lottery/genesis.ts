@@ -1,23 +1,30 @@
 /* eslint-disable */
 import _m0 from "protobufjs/minimal";
+import { LotteryInfo } from "./lottery_info";
 import { Params } from "./params";
 
 export const protobufPackage = "naruto0913.lottery.lottery";
 
 /** GenesisState defines the lottery module's genesis state. */
 export interface GenesisState {
+  params:
+    | Params
+    | undefined;
   /** this line is used by starport scaffolding # genesis/proto/state */
-  params: Params | undefined;
+  lotteryInfo: LotteryInfo | undefined;
 }
 
 function createBaseGenesisState(): GenesisState {
-  return { params: undefined };
+  return { params: undefined, lotteryInfo: undefined };
 }
 
 export const GenesisState = {
   encode(message: GenesisState, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.params !== undefined) {
       Params.encode(message.params, writer.uint32(10).fork()).ldelim();
+    }
+    if (message.lotteryInfo !== undefined) {
+      LotteryInfo.encode(message.lotteryInfo, writer.uint32(18).fork()).ldelim();
     }
     return writer;
   },
@@ -32,6 +39,9 @@ export const GenesisState = {
         case 1:
           message.params = Params.decode(reader, reader.uint32());
           break;
+        case 2:
+          message.lotteryInfo = LotteryInfo.decode(reader, reader.uint32());
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -41,12 +51,17 @@ export const GenesisState = {
   },
 
   fromJSON(object: any): GenesisState {
-    return { params: isSet(object.params) ? Params.fromJSON(object.params) : undefined };
+    return {
+      params: isSet(object.params) ? Params.fromJSON(object.params) : undefined,
+      lotteryInfo: isSet(object.lotteryInfo) ? LotteryInfo.fromJSON(object.lotteryInfo) : undefined,
+    };
   },
 
   toJSON(message: GenesisState): unknown {
     const obj: any = {};
     message.params !== undefined && (obj.params = message.params ? Params.toJSON(message.params) : undefined);
+    message.lotteryInfo !== undefined
+      && (obj.lotteryInfo = message.lotteryInfo ? LotteryInfo.toJSON(message.lotteryInfo) : undefined);
     return obj;
   },
 
@@ -54,6 +69,9 @@ export const GenesisState = {
     const message = createBaseGenesisState();
     message.params = (object.params !== undefined && object.params !== null)
       ? Params.fromPartial(object.params)
+      : undefined;
+    message.lotteryInfo = (object.lotteryInfo !== undefined && object.lotteryInfo !== null)
+      ? LotteryInfo.fromPartial(object.lotteryInfo)
       : undefined;
     return message;
   },

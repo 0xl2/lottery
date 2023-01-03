@@ -1,5 +1,6 @@
 /* eslint-disable */
 import _m0 from "protobufjs/minimal";
+import { LotteryInfo } from "./lottery_info";
 import { Params } from "./params";
 
 export const protobufPackage = "naruto0913.lottery.lottery";
@@ -12,6 +13,13 @@ export interface QueryParamsRequest {
 export interface QueryParamsResponse {
   /** params holds all the parameters of this module. */
   params: Params | undefined;
+}
+
+export interface QueryGetLotteryInfoRequest {
+}
+
+export interface QueryGetLotteryInfoResponse {
+  LotteryInfo: LotteryInfo | undefined;
 }
 
 function createBaseQueryParamsRequest(): QueryParamsRequest {
@@ -102,10 +110,101 @@ export const QueryParamsResponse = {
   },
 };
 
+function createBaseQueryGetLotteryInfoRequest(): QueryGetLotteryInfoRequest {
+  return {};
+}
+
+export const QueryGetLotteryInfoRequest = {
+  encode(_: QueryGetLotteryInfoRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): QueryGetLotteryInfoRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseQueryGetLotteryInfoRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(_: any): QueryGetLotteryInfoRequest {
+    return {};
+  },
+
+  toJSON(_: QueryGetLotteryInfoRequest): unknown {
+    const obj: any = {};
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<QueryGetLotteryInfoRequest>, I>>(_: I): QueryGetLotteryInfoRequest {
+    const message = createBaseQueryGetLotteryInfoRequest();
+    return message;
+  },
+};
+
+function createBaseQueryGetLotteryInfoResponse(): QueryGetLotteryInfoResponse {
+  return { LotteryInfo: undefined };
+}
+
+export const QueryGetLotteryInfoResponse = {
+  encode(message: QueryGetLotteryInfoResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.LotteryInfo !== undefined) {
+      LotteryInfo.encode(message.LotteryInfo, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): QueryGetLotteryInfoResponse {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseQueryGetLotteryInfoResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.LotteryInfo = LotteryInfo.decode(reader, reader.uint32());
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryGetLotteryInfoResponse {
+    return { LotteryInfo: isSet(object.LotteryInfo) ? LotteryInfo.fromJSON(object.LotteryInfo) : undefined };
+  },
+
+  toJSON(message: QueryGetLotteryInfoResponse): unknown {
+    const obj: any = {};
+    message.LotteryInfo !== undefined
+      && (obj.LotteryInfo = message.LotteryInfo ? LotteryInfo.toJSON(message.LotteryInfo) : undefined);
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<QueryGetLotteryInfoResponse>, I>>(object: I): QueryGetLotteryInfoResponse {
+    const message = createBaseQueryGetLotteryInfoResponse();
+    message.LotteryInfo = (object.LotteryInfo !== undefined && object.LotteryInfo !== null)
+      ? LotteryInfo.fromPartial(object.LotteryInfo)
+      : undefined;
+    return message;
+  },
+};
+
 /** Query defines the gRPC querier service. */
 export interface Query {
   /** Parameters queries the parameters of the module. */
   Params(request: QueryParamsRequest): Promise<QueryParamsResponse>;
+  /** Queries a LotteryInfo by index. */
+  LotteryInfo(request: QueryGetLotteryInfoRequest): Promise<QueryGetLotteryInfoResponse>;
 }
 
 export class QueryClientImpl implements Query {
@@ -113,11 +212,18 @@ export class QueryClientImpl implements Query {
   constructor(rpc: Rpc) {
     this.rpc = rpc;
     this.Params = this.Params.bind(this);
+    this.LotteryInfo = this.LotteryInfo.bind(this);
   }
   Params(request: QueryParamsRequest): Promise<QueryParamsResponse> {
     const data = QueryParamsRequest.encode(request).finish();
     const promise = this.rpc.request("naruto0913.lottery.lottery.Query", "Params", data);
     return promise.then((data) => QueryParamsResponse.decode(new _m0.Reader(data)));
+  }
+
+  LotteryInfo(request: QueryGetLotteryInfoRequest): Promise<QueryGetLotteryInfoResponse> {
+    const data = QueryGetLotteryInfoRequest.encode(request).finish();
+    const promise = this.rpc.request("naruto0913.lottery.lottery.Query", "LotteryInfo", data);
+    return promise.then((data) => QueryGetLotteryInfoResponse.decode(new _m0.Reader(data)));
   }
 }
 

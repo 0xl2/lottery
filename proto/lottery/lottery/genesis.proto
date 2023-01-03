@@ -3,6 +3,7 @@ package naruto0913.lottery.lottery;
 
 import "gogoproto/gogo.proto";
 import "lottery/lottery/params.proto";
+import "lottery/lottery/lottery_info.proto";
 // this line is used by starport scaffolding # genesis/proto/import
 
 option go_package = "github.com/naruto0913/lottery/x/lottery/types";
@@ -10,5 +11,6 @@ option go_package = "github.com/naruto0913/lottery/x/lottery/types";
 // GenesisState defines the lottery module's genesis state.
 message GenesisState {
   Params params = 1 [(gogoproto.nullable) = false];
+  LotteryInfo lotteryInfo = 2;
   // this line is used by starport scaffolding # genesis/proto/state
 }

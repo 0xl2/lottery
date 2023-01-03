@@ -9,10 +9,19 @@
  * ---------------------------------------------------------------
  */
 
+export interface LotteryLotteryInfo {
+  /** @format uint64 */
+  nextId?: string;
+}
+
 /**
  * Params defines the parameters for the module.
  */
 export type LotteryParams = object;
+
+export interface LotteryQueryGetLotteryInfoResponse {
+  LotteryInfo?: LotteryLotteryInfo;
+}
 
 /**
  * QueryParamsResponse is response type for the Query/Params RPC method.
@@ -158,6 +167,22 @@ export class HttpClient<SecurityDataType = unknown> {
  * @version version not set
  */
 export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDataType> {
+  /**
+   * No description
+   *
+   * @tags Query
+   * @name QueryLotteryInfo
+   * @summary Queries a LotteryInfo by index.
+   * @request GET:/naruto0913/lottery/lottery/lottery_info
+   */
+  queryLotteryInfo = (params: RequestParams = {}) =>
+    this.request<LotteryQueryGetLotteryInfoResponse, RpcStatus>({
+      path: `/naruto0913/lottery/lottery/lottery_info`,
+      method: "GET",
+      format: "json",
+      ...params,
+    });
+
   /**
    * No description
    *
