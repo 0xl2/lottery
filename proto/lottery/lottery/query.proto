@@ -7,6 +7,8 @@ import "cosmos/base/query/v1beta1/pagination.proto";
 import "lottery/lottery/params.proto";
 import "lottery/lottery/lottery_info.proto";
 import "lottery/lottery/stored_lottery.proto";
+import "lottery/lottery/stored_bet.proto";
+import "lottery/lottery/bet_info.proto";
 // this line is used by starport scaffolding # 1
 
 option go_package = "github.com/naruto0913/lottery/x/lottery/types";
@@ -31,6 +33,20 @@ service Query {
 		option (google.api.http).get = "/naruto0913/lottery/lottery/stored_lottery";
 	}
 
+// Queries a StoredBet by index.
+	rpc StoredBet(QueryGetStoredBetRequest) returns (QueryGetStoredBetResponse) {
+		option (google.api.http).get = "/naruto0913/lottery/lottery/stored_bet/{index}";
+	}
+
+	// Queries a list of StoredBet items.
+	rpc StoredBetAll(QueryAllStoredBetRequest) returns (QueryAllStoredBetResponse) {
+		option (google.api.http).get = "/naruto0913/lottery/lottery/stored_bet";
+	}
+
+// Queries a BetInfo by index.
+	rpc BetInfo(QueryGetBetInfoRequest) returns (QueryGetBetInfoResponse) {
+		option (google.api.http).get = "/naruto0913/lottery/lottery/bet_info";
+	}
 // this line is used by starport scaffolding # 2
 }
 
@@ -66,4 +82,27 @@ message QueryAllStoredLotteryResponse {
 	cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
 
+message QueryGetStoredBetRequest {
+	  string index = 1;
+
+}
+
+message QueryGetStoredBetResponse {
+	StoredBet storedBet = 1 [(gogoproto.nullable) = false];
+}
+
+message QueryAllStoredBetRequest {
+	cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+message QueryAllStoredBetResponse {
+	repeated StoredBet storedBet = 1 [(gogoproto.nullable) = false];
+	cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+message QueryGetBetInfoRequest {}
+
+message QueryGetBetInfoResponse {
+	BetInfo BetInfo = 1 [(gogoproto.nullable) = false];
+}
 // this line is used by starport scaffolding # 3

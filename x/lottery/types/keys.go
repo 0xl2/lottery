@@ -21,3 +21,7 @@ func KeyPrefix(p string) []byte {
 const (
 	LotteryInfoKey = "LotteryInfo/value/"
 )
+
+const (
+	BetInfoKey = "BetInfo/value/"
+)

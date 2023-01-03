@@ -1,0 +1,14 @@
+syntax = "proto3";
+package naruto0913.lottery.lottery;
+
+option go_package = "github.com/naruto0913/lottery/x/lottery/types";
+
+message StoredBet {
+  string index = 1; 
+  string userAddr = 2; 
+  uint64 lotteryIndex = 3; 
+  uint64 orderIndex = 4; 
+  uint64 betAmount = 5; 
+  
+}
+

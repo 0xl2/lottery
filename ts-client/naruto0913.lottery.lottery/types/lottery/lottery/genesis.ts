@@ -1,7 +1,9 @@
 /* eslint-disable */
 import _m0 from "protobufjs/minimal";
+import { BetInfo } from "./bet_info";
 import { LotteryInfo } from "./lottery_info";
 import { Params } from "./params";
+import { StoredBet } from "./stored_bet";
 import { StoredLottery } from "./stored_lottery";
 
 export const protobufPackage = "naruto0913.lottery.lottery";
@@ -9,15 +11,15 @@ export const protobufPackage = "naruto0913.lottery.lottery";
 /** GenesisState defines the lottery module's genesis state. */
 export interface GenesisState {
   params: Params | undefined;
-  lotteryInfo:
-    | LotteryInfo
-    | undefined;
-  /** this line is used by starport scaffolding # genesis/proto/state */
+  lotteryInfo: LotteryInfo | undefined;
   storedLotteryList: StoredLottery[];
+  storedBetList: StoredBet[];
+  /** this line is used by starport scaffolding # genesis/proto/state */
+  betInfo: BetInfo | undefined;
 }
 
 function createBaseGenesisState(): GenesisState {
-  return { params: undefined, lotteryInfo: undefined, storedLotteryList: [] };
+  return { params: undefined, lotteryInfo: undefined, storedLotteryList: [], storedBetList: [], betInfo: undefined };
 }
 
 export const GenesisState = {
@@ -30,6 +32,12 @@ export const GenesisState = {
     }
     for (const v of message.storedLotteryList) {
       StoredLottery.encode(v!, writer.uint32(26).fork()).ldelim();
+    }
+    for (const v of message.storedBetList) {
+      StoredBet.encode(v!, writer.uint32(34).fork()).ldelim();
+    }
+    if (message.betInfo !== undefined) {
+      BetInfo.encode(message.betInfo, writer.uint32(42).fork()).ldelim();
     }
     return writer;
   },
@@ -50,6 +58,12 @@ export const GenesisState = {
         case 3:
           message.storedLotteryList.push(StoredLottery.decode(reader, reader.uint32()));
           break;
+        case 4:
+          message.storedBetList.push(StoredBet.decode(reader, reader.uint32()));
+          break;
+        case 5:
+          message.betInfo = BetInfo.decode(reader, reader.uint32());
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -65,6 +79,10 @@ export const GenesisState = {
       storedLotteryList: Array.isArray(object?.storedLotteryList)
         ? object.storedLotteryList.map((e: any) => StoredLottery.fromJSON(e))
         : [],
+      storedBetList: Array.isArray(object?.storedBetList)
+        ? object.storedBetList.map((e: any) => StoredBet.fromJSON(e))
+        : [],
+      betInfo: isSet(object.betInfo) ? BetInfo.fromJSON(object.betInfo) : undefined,
     };
   },
 
@@ -78,6 +96,12 @@ export const GenesisState = {
     } else {
       obj.storedLotteryList = [];
     }
+    if (message.storedBetList) {
+      obj.storedBetList = message.storedBetList.map((e) => e ? StoredBet.toJSON(e) : undefined);
+    } else {
+      obj.storedBetList = [];
+    }
+    message.betInfo !== undefined && (obj.betInfo = message.betInfo ? BetInfo.toJSON(message.betInfo) : undefined);
     return obj;
   },
 
@@ -90,6 +114,10 @@ export const GenesisState = {
       ? LotteryInfo.fromPartial(object.lotteryInfo)
       : undefined;
     message.storedLotteryList = object.storedLotteryList?.map((e) => StoredLottery.fromPartial(e)) || [];
+    message.storedBetList = object.storedBetList?.map((e) => StoredBet.fromPartial(e)) || [];
+    message.betInfo = (object.betInfo !== undefined && object.betInfo !== null)
+      ? BetInfo.fromPartial(object.betInfo)
+      : undefined;
     return message;
   },
 };

@@ -25,6 +25,17 @@ func TestGenesis(t *testing.T) {
 				Index: "1",
 			},
 		},
+		StoredBetList: []types.StoredBet{
+			{
+				Index: "0",
+			},
+			{
+				Index: "1",
+			},
+		},
+		BetInfo: &types.BetInfo{
+			BetId: 91,
+		},
 		// this line is used by starport scaffolding # genesis/test/state
 	}
 
@@ -38,5 +49,7 @@ func TestGenesis(t *testing.T) {
 
 	require.Equal(t, genesisState.LotteryInfo, got.LotteryInfo)
 	require.ElementsMatch(t, genesisState.StoredLotteryList, got.StoredLotteryList)
+	require.ElementsMatch(t, genesisState.StoredBetList, got.StoredBetList)
+	require.Equal(t, genesisState.BetInfo, got.BetInfo)
 	// this line is used by starport scaffolding # genesis/test/assert
 }

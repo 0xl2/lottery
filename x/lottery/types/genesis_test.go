@@ -33,6 +33,17 @@ func TestGenesisState_Validate(t *testing.T) {
 						Index: "1",
 					},
 				},
+				StoredBetList: []types.StoredBet{
+					{
+						Index: "0",
+					},
+					{
+						Index: "1",
+					},
+				},
+				BetInfo: &types.BetInfo{
+					BetId: 64,
+				},
 				// this line is used by starport scaffolding # types/genesis/validField
 			},
 			valid: true,
@@ -41,6 +52,20 @@ func TestGenesisState_Validate(t *testing.T) {
 			desc: "duplicated storedLottery",
 			genState: &types.GenesisState{
 				StoredLotteryList: []types.StoredLottery{
+					{
+						Index: "0",
+					},
+					{
+						Index: "0",
+					},
+				},
+			},
+			valid: false,
+		},
+		{
+			desc: "duplicated storedBet",
+			genState: &types.GenesisState{
+				StoredBetList: []types.StoredBet{
 					{
 						Index: "0",
 					},

@@ -9,6 +9,11 @@
  * ---------------------------------------------------------------
  */
 
+export interface LotteryBetInfo {
+  /** @format uint64 */
+  betId?: string;
+}
+
 export interface LotteryLotteryInfo {
   /** @format uint64 */
   nextId?: string;
@@ -18,6 +23,21 @@ export interface LotteryLotteryInfo {
  * Params defines the parameters for the module.
  */
 export type LotteryParams = object;
+
+export interface LotteryQueryAllStoredBetResponse {
+  storedBet?: LotteryStoredBet[];
+
+  /**
+   * PageResponse is to be embedded in gRPC response messages where the
+   * corresponding request message has used PageRequest.
+   *
+   *  message SomeResponse {
+   *          repeated Bar results = 1;
+   *          PageResponse page = 2;
+   *  }
+   */
+  pagination?: V1Beta1PageResponse;
+}
 
 export interface LotteryQueryAllStoredLotteryResponse {
   storedLottery?: LotteryStoredLottery[];
@@ -34,8 +54,16 @@ export interface LotteryQueryAllStoredLotteryResponse {
   pagination?: V1Beta1PageResponse;
 }
 
+export interface LotteryQueryGetBetInfoResponse {
+  BetInfo?: LotteryBetInfo;
+}
+
 export interface LotteryQueryGetLotteryInfoResponse {
   LotteryInfo?: LotteryLotteryInfo;
+}
+
+export interface LotteryQueryGetStoredBetResponse {
+  storedBet?: LotteryStoredBet;
 }
 
 export interface LotteryQueryGetStoredLotteryResponse {
@@ -48,6 +76,20 @@ export interface LotteryQueryGetStoredLotteryResponse {
 export interface LotteryQueryParamsResponse {
   /** params holds all the parameters of this module. */
   params?: LotteryParams;
+}
+
+export interface LotteryStoredBet {
+  index?: string;
+  userAddr?: string;
+
+  /** @format uint64 */
+  lotteryIndex?: string;
+
+  /** @format uint64 */
+  orderIndex?: string;
+
+  /** @format uint64 */
+  betAmount?: string;
 }
 
 export interface LotteryStoredLottery {
@@ -268,10 +310,26 @@ export class HttpClient<SecurityDataType = unknown> {
 }
 
 /**
- * @title lottery/lottery/genesis.proto
+ * @title lottery/lottery/bet_info.proto
  * @version version not set
  */
 export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDataType> {
+  /**
+   * No description
+   *
+   * @tags Query
+   * @name QueryBetInfo
+   * @summary Queries a BetInfo by index.
+   * @request GET:/naruto0913/lottery/lottery/bet_info
+   */
+  queryBetInfo = (params: RequestParams = {}) =>
+    this.request<LotteryQueryGetBetInfoResponse, RpcStatus>({
+      path: `/naruto0913/lottery/lottery/bet_info`,
+      method: "GET",
+      format: "json",
+      ...params,
+    });
+
   /**
    * No description
    *
@@ -299,6 +357,48 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
   queryParams = (params: RequestParams = {}) =>
     this.request<LotteryQueryParamsResponse, RpcStatus>({
       path: `/naruto0913/lottery/lottery/params`,
+      method: "GET",
+      format: "json",
+      ...params,
+    });
+
+  /**
+   * No description
+   *
+   * @tags Query
+   * @name QueryStoredBetAll
+   * @summary Queries a list of StoredBet items.
+   * @request GET:/naruto0913/lottery/lottery/stored_bet
+   */
+  queryStoredBetAll = (
+    query?: {
+      "pagination.key"?: string;
+      "pagination.offset"?: string;
+      "pagination.limit"?: string;
+      "pagination.count_total"?: boolean;
+      "pagination.reverse"?: boolean;
+    },
+    params: RequestParams = {},
+  ) =>
+    this.request<LotteryQueryAllStoredBetResponse, RpcStatus>({
+      path: `/naruto0913/lottery/lottery/stored_bet`,
+      method: "GET",
+      query: query,
+      format: "json",
+      ...params,
+    });
+
+  /**
+   * No description
+   *
+   * @tags Query
+   * @name QueryStoredBet
+   * @summary Queries a StoredBet by index.
+   * @request GET:/naruto0913/lottery/lottery/stored_bet/{index}
+   */
+  queryStoredBet = (index: string, params: RequestParams = {}) =>
+    this.request<LotteryQueryGetStoredBetResponse, RpcStatus>({
+      path: `/naruto0913/lottery/lottery/stored_bet/${index}`,
       method: "GET",
       format: "json",
       ...params,
