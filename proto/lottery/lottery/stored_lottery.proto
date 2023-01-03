@@ -9,6 +9,6 @@ message StoredLottery {
   uint64 winIndex = 3; 
   uint64 fee = 4; 
   uint64 minBet = 5; 
-  
+  uint64 maxBet = 6; 
 }
 
