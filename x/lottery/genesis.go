@@ -24,6 +24,10 @@ func InitGenesis(ctx sdk.Context, k keeper.Keeper, genState types.GenesisState) 
 	if genState.BetInfo != nil {
 		k.SetBetInfo(ctx, *genState.BetInfo)
 	}
+	// Set if defined
+	if genState.LotteryData != nil {
+		k.SetLotteryData(ctx, *genState.LotteryData)
+	}
 	// this line is used by starport scaffolding # genesis/module/init
 	k.SetParams(ctx, genState.Params)
 }
@@ -44,6 +48,11 @@ func ExportGenesis(ctx sdk.Context, k keeper.Keeper) *types.GenesisState {
 	betInfo, found := k.GetBetInfo(ctx)
 	if found {
 		genesis.BetInfo = &betInfo
+	}
+	// Get all lotteryData
+	lotteryData, found := k.GetLotteryData(ctx)
+	if found {
+		genesis.LotteryData = &lotteryData
 	}
 	// this line is used by starport scaffolding # genesis/module/export
 

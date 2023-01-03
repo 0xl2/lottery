@@ -44718,6 +44718,48 @@ paths:
                   additionalProperties: {}
       tags:
         - Query
+  /naruto0913/lottery/lottery/lottery_data:
+    get:
+      summary: Queries a LotteryData by index.
+      operationId: Naruto0913LotteryLotteryLotteryData
+      responses:
+        '200':
+          description: A successful response.
+          schema:
+            type: object
+            properties:
+              LotteryData:
+                type: object
+                properties:
+                  minBet:
+                    type: string
+                    format: uint64
+                  maxBet:
+                    type: string
+                    format: uint64
+                  fee:
+                    type: string
+                    format: uint64
+        default:
+          description: An unexpected error response.
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+              message:
+                type: string
+              details:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    '@type':
+                      type: string
+                  additionalProperties: {}
+      tags:
+        - Query
   /naruto0913/lottery/lottery/lottery_info:
     get:
       summary: Queries a LotteryInfo by index.
@@ -44809,12 +44851,6 @@ paths:
                       type: string
                     userAddr:
                       type: string
-                    lotteryIndex:
-                      type: string
-                      format: uint64
-                    orderIndex:
-                      type: string
-                      format: uint64
                     betAmount:
                       type: string
                       format: uint64
@@ -44940,12 +44976,6 @@ paths:
                     type: string
                   userAddr:
                     type: string
-                  lotteryIndex:
-                    type: string
-                    format: uint64
-                  orderIndex:
-                    type: string
-                    format: uint64
                   betAmount:
                     type: string
                     format: uint64
@@ -44996,10 +45026,7 @@ paths:
                     winIndex:
                       type: string
                       format: uint64
-                    fee:
-                      type: string
-                      format: uint64
-                    minBet:
+                    startTxInd:
                       type: string
                       format: uint64
               pagination:
@@ -45127,10 +45154,7 @@ paths:
                   winIndex:
                     type: string
                     format: uint64
-                  fee:
-                    type: string
-                    format: uint64
-                  minBet:
+                  startTxInd:
                     type: string
                     format: uint64
         default:
@@ -74717,6 +74741,18 @@ definitions:
       betId:
         type: string
         format: uint64
+  naruto0913.lottery.lottery.LotteryData:
+    type: object
+    properties:
+      minBet:
+        type: string
+        format: uint64
+      maxBet:
+        type: string
+        format: uint64
+      fee:
+        type: string
+        format: uint64
   naruto0913.lottery.lottery.LotteryInfo:
     type: object
     properties:
@@ -74738,12 +74774,6 @@ definitions:
               type: string
             userAddr:
               type: string
-            lotteryIndex:
-              type: string
-              format: uint64
-            orderIndex:
-              type: string
-              format: uint64
             betAmount:
               type: string
               format: uint64
@@ -74788,10 +74818,7 @@ definitions:
             winIndex:
               type: string
               format: uint64
-            fee:
-              type: string
-              format: uint64
-            minBet:
+            startTxInd:
               type: string
               format: uint64
       pagination:
@@ -74829,6 +74856,21 @@ definitions:
           betId:
             type: string
             format: uint64
+  naruto0913.lottery.lottery.QueryGetLotteryDataResponse:
+    type: object
+    properties:
+      LotteryData:
+        type: object
+        properties:
+          minBet:
+            type: string
+            format: uint64
+          maxBet:
+            type: string
+            format: uint64
+          fee:
+            type: string
+            format: uint64
   naruto0913.lottery.lottery.QueryGetLotteryInfoResponse:
     type: object
     properties:
@@ -74848,12 +74890,6 @@ definitions:
             type: string
           userAddr:
             type: string
-          lotteryIndex:
-            type: string
-            format: uint64
-          orderIndex:
-            type: string
-            format: uint64
           betAmount:
             type: string
             format: uint64
@@ -74870,10 +74906,7 @@ definitions:
           winIndex:
             type: string
             format: uint64
-          fee:
-            type: string
-            format: uint64
-          minBet:
+          startTxInd:
             type: string
             format: uint64
   naruto0913.lottery.lottery.QueryParamsResponse:
@@ -74890,12 +74923,6 @@ definitions:
         type: string
       userAddr:
         type: string
-      lotteryIndex:
-        type: string
-        format: uint64
-      orderIndex:
-        type: string
-        format: uint64
       betAmount:
         type: string
         format: uint64
@@ -74909,9 +74936,6 @@ definitions:
       winIndex:
         type: string
         format: uint64
-      fee:
-        type: string
-        format: uint64
-      minBet:
+      startTxInd:
         type: string
         format: uint64

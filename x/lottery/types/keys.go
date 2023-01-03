@@ -25,3 +25,7 @@ const (
 const (
 	BetInfoKey = "BetInfo/value/"
 )
+
+const (
+	LotteryDataKey = "LotteryData/value/"
+)

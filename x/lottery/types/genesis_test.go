@@ -44,6 +44,11 @@ func TestGenesisState_Validate(t *testing.T) {
 				BetInfo: &types.BetInfo{
 					BetId: 64,
 				},
+				LotteryData: &types.LotteryData{
+					MinBet: 14,
+					MaxBet: 44,
+					Fee:    73,
+				},
 				// this line is used by starport scaffolding # types/genesis/validField
 			},
 			valid: true,

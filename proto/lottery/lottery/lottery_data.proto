@@ -1,0 +1,11 @@
+syntax = "proto3";
+package naruto0913.lottery.lottery;
+
+option go_package = "github.com/naruto0913/lottery/x/lottery/types";
+
+message LotteryData {
+  uint64 minBet = 1; 
+  uint64 maxBet = 2; 
+  uint64 fee = 3; 
+  
+}

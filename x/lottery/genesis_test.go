@@ -36,6 +36,11 @@ func TestGenesis(t *testing.T) {
 		BetInfo: &types.BetInfo{
 			BetId: 91,
 		},
+		LotteryData: &types.LotteryData{
+			MinBet: 16,
+			MaxBet: 58,
+			Fee:    35,
+		},
 		// this line is used by starport scaffolding # genesis/test/state
 	}
 
@@ -51,5 +56,6 @@ func TestGenesis(t *testing.T) {
 	require.ElementsMatch(t, genesisState.StoredLotteryList, got.StoredLotteryList)
 	require.ElementsMatch(t, genesisState.StoredBetList, got.StoredBetList)
 	require.Equal(t, genesisState.BetInfo, got.BetInfo)
+	require.Equal(t, genesisState.LotteryData, got.LotteryData)
 	// this line is used by starport scaffolding # genesis/test/assert
 }

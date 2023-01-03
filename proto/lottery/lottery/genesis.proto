@@ -7,6 +7,7 @@ import "lottery/lottery/lottery_info.proto";
 import "lottery/lottery/stored_lottery.proto";
 import "lottery/lottery/stored_bet.proto";
 import "lottery/lottery/bet_info.proto";
+import "lottery/lottery/lottery_data.proto";
 // this line is used by starport scaffolding # genesis/proto/import
 
 option go_package = "github.com/naruto0913/lottery/x/lottery/types";
@@ -18,5 +19,6 @@ message GenesisState {
   repeated StoredLottery storedLotteryList = 3 [(gogoproto.nullable) = false];
   repeated StoredBet storedBetList = 4 [(gogoproto.nullable) = false];
   BetInfo betInfo = 5;
+  LotteryData lotteryData = 6;
   // this line is used by starport scaffolding # genesis/proto/state
 }

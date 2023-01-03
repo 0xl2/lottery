@@ -9,6 +9,7 @@ import "lottery/lottery/lottery_info.proto";
 import "lottery/lottery/stored_lottery.proto";
 import "lottery/lottery/stored_bet.proto";
 import "lottery/lottery/bet_info.proto";
+import "lottery/lottery/lottery_data.proto";
 // this line is used by starport scaffolding # 1
 
 option go_package = "github.com/naruto0913/lottery/x/lottery/types";
@@ -46,6 +47,10 @@ service Query {
 // Queries a BetInfo by index.
 	rpc BetInfo(QueryGetBetInfoRequest) returns (QueryGetBetInfoResponse) {
 		option (google.api.http).get = "/naruto0913/lottery/lottery/bet_info";
+	}
+// Queries a LotteryData by index.
+	rpc LotteryData(QueryGetLotteryDataRequest) returns (QueryGetLotteryDataResponse) {
+		option (google.api.http).get = "/naruto0913/lottery/lottery/lottery_data";
 	}
 // this line is used by starport scaffolding # 2
 }
@@ -104,5 +109,10 @@ message QueryGetBetInfoRequest {}
 
 message QueryGetBetInfoResponse {
 	BetInfo BetInfo = 1 [(gogoproto.nullable) = false];
+}
+message QueryGetLotteryDataRequest {}
+
+message QueryGetLotteryDataResponse {
+	LotteryData LotteryData = 1 [(gogoproto.nullable) = false];
 }
 // this line is used by starport scaffolding # 3
