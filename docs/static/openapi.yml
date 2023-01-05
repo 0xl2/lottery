@@ -44776,6 +44776,9 @@ paths:
                   nextId:
                     type: string
                     format: uint64
+                  nextOrder:
+                    type: string
+                    format: uint64
         default:
           description: An unexpected error response.
           schema:
@@ -74759,6 +74762,14 @@ definitions:
       nextId:
         type: string
         format: uint64
+      nextOrder:
+        type: string
+        format: uint64
+  naruto0913.lottery.lottery.MsgDoBetResponse:
+    type: object
+    properties:
+      betOrder:
+        type: string
   naruto0913.lottery.lottery.Params:
     type: object
     description: Params defines the parameters for the module.
@@ -74878,6 +74889,9 @@ definitions:
         type: object
         properties:
           nextId:
+            type: string
+            format: uint64
+          nextOrder:
             type: string
             format: uint64
   naruto0913.lottery.lottery.QueryGetStoredBetResponse:

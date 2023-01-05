@@ -17,6 +17,7 @@ type (
 		storeKey   storetypes.StoreKey
 		memKey     storetypes.StoreKey
 		paramstore paramtypes.Subspace
+		bankKeeper types.BankKeeper
 	}
 )
 
@@ -25,7 +26,7 @@ func NewKeeper(
 	storeKey,
 	memKey storetypes.StoreKey,
 	ps paramtypes.Subspace,
-
+	bk types.BankKeeper,
 ) *Keeper {
 	// set KeyTable if it has not already been set
 	if !ps.HasKeyTable() {
@@ -38,9 +39,23 @@ func NewKeeper(
 		storeKey:   storeKey,
 		memKey:     memKey,
 		paramstore: ps,
+		bankKeeper: bk,
 	}
 }
 
 func (k Keeper) Logger(ctx sdk.Context) log.Logger {
 	return ctx.Logger().With("module", fmt.Sprintf("x/%s", types.ModuleName))
+}
+
+func (k Keeper) CheckBalance(ctx sdk.Context, userAddr string) bool {
+	// Get lotteryData
+	lotteryData, found := k.GetLotteryData(ctx)
+	if !found {
+		panic("LotteryData not found")
+	}
+
+	userBalance := k.bankKeeper.SpendableCoins(ctx, sdk.AccAddress(userAddr)).AmountOf("demon");
+
+	// return uint(userBalance) < lotteryData.MinBet
+	return true
 }
