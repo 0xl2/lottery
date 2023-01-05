@@ -2,6 +2,7 @@ package keeper
 
 import (
 	"fmt"
+	sdkmath "cosmossdk.io/math"
 
 	"github.com/cosmos/cosmos-sdk/codec"
 	storetypes "github.com/cosmos/cosmos-sdk/store/types"
@@ -56,6 +57,5 @@ func (k Keeper) CheckBalance(ctx sdk.Context, userAddr string) bool {
 
 	userBalance := k.bankKeeper.SpendableCoins(ctx, sdk.AccAddress(userAddr)).AmountOf("demon");
 
-	// return uint(userBalance) < lotteryData.MinBet
-	return true
+	return userBalance.GTE(sdkmath.NewInt(int64(lotteryData.GetMinBet())))
 }
