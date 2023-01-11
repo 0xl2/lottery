@@ -22,7 +22,7 @@ accounts:
     coins: ["9token", "100000000stake"]
   - name: user10
     coins: ["10token", "100000000stake"]
-  - name: user1
+  - name: user11
     coins: ["11token", "100000000stake"]
   - name: user12
     coins: ["12token", "100000000stake"]
