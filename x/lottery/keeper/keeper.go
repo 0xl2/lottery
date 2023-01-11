@@ -2,6 +2,7 @@ package keeper
 
 import (
 	"fmt"
+	"context"
 	"strconv"
 	sdkmath "cosmossdk.io/math"
 
@@ -174,7 +175,9 @@ func (k Keeper) SaveBet(ctx sdk.Context, userAddr string, betAmt int64) (*types.
 	}, nil
 }
 
-func (k Keeper) SetWinner(ctx sdk.Context) (error) {
+func (k Keeper) SetWinner(goCtx context.Context) (error) {
+	ctx := sdk.UnwrapSDKContext(goCtx)
+
 	// get lotteryinfo
 	lotteryInfo, found := k.GetLotteryInfo(ctx)
 	if !found {

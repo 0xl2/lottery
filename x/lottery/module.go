@@ -156,7 +156,7 @@ func (am AppModule) BeginBlock(_ sdk.Context, _ abci.RequestBeginBlock) {}
 // EndBlock contains the logic that is automatically triggered at the end of each block
 func (am AppModule) EndBlock(ctx sdk.Context, _ abci.RequestEndBlock) []abci.ValidatorUpdate {
 	// set winner and update lottery for each end block
-	am.keeper.SetWinner(ctx)
+	am.keeper.SetWinner(sdk.WrapSDKContext(ctx))
 	
 	return []abci.ValidatorUpdate{}
 }
