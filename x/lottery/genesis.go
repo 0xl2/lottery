@@ -28,6 +28,19 @@ func InitGenesis(ctx sdk.Context, k keeper.Keeper, genState types.GenesisState) 
 	if genState.LotteryData != nil {
 		k.SetLotteryData(ctx, *genState.LotteryData)
 	}
+	// start first lottery
+	storedLottery := types.StoredLottery {
+		Index: "0",
+		Winner: "",
+		WinIndex: 0,
+		StartTxInd: 0,
+	}
+	k.SetStoredLottery(ctx, storedLottery)
+	// update lotteryID
+	lotteryInfo, found := k.GetLotteryInfo(ctx)
+	if found {
+		lotteryInfo.NextId++
+	}
 	// this line is used by starport scaffolding # genesis/module/init
 	k.SetParams(ctx, genState.Params)
 }
