@@ -147,6 +147,7 @@ func (k Keeper) SaveBet(ctx sdk.Context, userAddr string, betAmt int64) (*types.
 		return nil, types.ErrLotteryInfo
 	}
 
+	// emit DoBet event
 	ctx.EventManager().EmitTypedEvent(&types.DoBet{
 		LotteryID: lotteryInfo.GetNextId(),
 		BetID: betID,
@@ -215,6 +216,13 @@ func (k Keeper) SetWinner(goCtx context.Context) (error) {
 			// update current lottery info
 			currentLottery.WinIndex = winIndex
 			currentLottery.Winner = selTx.GetUserAddr()
+
+			// emit FinishLottery event
+			ctx.EventManager().EmitTypedEvent(&types.FinishLottery{
+				LotteryID: lotteryID - 1,
+				WinnerInd: winIndex,
+				Winner: selTx.GetUserAddr(),
+			})
 
 			// Get lotteryData
 			lotteryData, found := k.GetLotteryData(ctx)
