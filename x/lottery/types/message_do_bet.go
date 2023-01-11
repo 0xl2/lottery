@@ -9,7 +9,7 @@ const TypeMsgDoBet = "do_bet"
 
 var _ sdk.Msg = &MsgDoBet{}
 
-func NewMsgDoBet(creator string, betAmount uint64) *MsgDoBet {
+func NewMsgDoBet(creator string, betAmount int64) *MsgDoBet {
 	return &MsgDoBet{
 		Creator:   creator,
 		BetAmount: betAmount,

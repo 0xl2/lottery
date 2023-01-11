@@ -66,7 +66,7 @@ func (k Keeper) CheckBalance(ctx sdk.Context, userAddr string) bool {
 	return userBalance.GTE(sdkmath.NewInt(int64(lotteryData.GetMinBet())))
 }
 
-func (k Keeper) CheckRange(ctx sdk.Context, betAmt uint64) bool {
+func (k Keeper) CheckRange(ctx sdk.Context, betAmt int64) bool {
 	// Get lotteryData
 	lotteryData, found := k.GetLotteryData(ctx)
 	if !found {
@@ -86,7 +86,7 @@ func (k Keeper) CheckBet(ctx sdk.Context, userAddr string) bool {
 
 	// get current lottery from lotteryID
 	lotteryID := lotteryInfo.GetNextId()
-	newIndex := strconv.FormatUint(lotteryID, 10)
+	newIndex := strconv.FormatInt(lotteryID, 10)
 	currentLottery, found := k.GetStoredLottery(ctx, newIndex)
 	if !found {
 		panic("Lottery not found")
@@ -98,7 +98,7 @@ func (k Keeper) CheckBet(ctx sdk.Context, userAddr string) bool {
 
 	beted := false;
 	for i := starttxID; i < lastTxID; i++ {
-		iStr := strconv.FormatUint(i, 10)
+		iStr := strconv.FormatInt(i, 10)
 		selTx, found := k.GetStoredBet(ctx, iStr)
 		if !found {
 			panic("Tx not found")
@@ -120,7 +120,7 @@ func (k Keeper) SaveBet(ctx sdk.Context, userAddr string, betAmt int64) (*types.
 		panic("BetInfo not found")
 	}
 
-	newIndex := strconv.FormatUint(betInfo.BetId, 10)
+	newIndex := strconv.FormatInt(betInfo.BetId, 10)
 	storedBet := types.StoredBet{
 		Index: newIndex,
 		UserAddr: userAddr,

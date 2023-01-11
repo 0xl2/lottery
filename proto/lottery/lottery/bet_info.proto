@@ -4,6 +4,6 @@ package naruto0913.lottery.lottery;
 option go_package = "github.com/naruto0913/lottery/x/lottery/types";
 
 message BetInfo {
-  uint64 betId = 1; 
+  int64 betId = 1; 
   
 }

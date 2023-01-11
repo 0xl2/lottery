@@ -6,8 +6,8 @@ option go_package = "github.com/naruto0913/lottery/x/lottery/types";
 message StoredLottery {
   string index = 1; 
   string winner = 2; 
-  uint64 winIndex = 3; 
-  uint64 startTxInd = 4; 
+  int64 winIndex = 3; 
+  int64 startTxInd = 4; 
 
 }
 

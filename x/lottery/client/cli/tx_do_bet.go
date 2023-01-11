@@ -19,7 +19,7 @@ func CmdDoBet() *cobra.Command {
 		Short: "Broadcast message doBet",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
-			argBetAmount, err := cast.ToUint64E(args[0])
+			argBetAmount, err := cast.ToInt64E(args[0])
 			if err != nil {
 				return err
 			}
