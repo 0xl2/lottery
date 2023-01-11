@@ -13,7 +13,7 @@ service Msg {
 
 message MsgDoBet {
   string creator = 1;
-  uint64 betAmount = 2;
+  int64 betAmount = 2;
 }
 
 message MsgDoBetResponse {

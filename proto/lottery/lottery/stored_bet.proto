@@ -6,7 +6,7 @@ option go_package = "github.com/naruto0913/lottery/x/lottery/types";
 message StoredBet {
   string index = 1; 
   string userAddr = 2; 
-  uint64 betAmount = 3; 
+  int64 betAmount = 3; 
   
 }
 

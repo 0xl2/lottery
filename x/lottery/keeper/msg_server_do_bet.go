@@ -28,28 +28,5 @@ func (k msgServer) DoBet(goCtx context.Context, msg *types.MsgDoBet) (*types.Msg
 		panic("Invalid amount")
 	}
 
-	// save bet info
-	betInfo, found := k.Keeper.GetBetInfo(ctx)
-	if !found {
-		panic("BetInfo not found")
-	}
-
-	storedBet := types.StoredBet{
-		Index: string(rune(betInfo.BetId)),
-		UserAddr: msg.Creator,
-		BetAmount: msg.BetAmount,
-	}
-	k.Keeper.SetStoredBet(ctx, storedBet)
-
-	// update betID
-	betInfo.BetId++
-
-	// update lottery info
-	lotteryInfo, found := k.Keeper.GetLotteryInfo(ctx)
-	if !found {
-		panic("LotteryInfo not found")
-	}
-	lotteryInfo.NextOrder++
-
 	return &types.MsgDoBetResponse{}, nil
 }

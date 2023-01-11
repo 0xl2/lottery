@@ -2,6 +2,7 @@ package keeper
 
 import (
 	"fmt"
+	"strconv"
 	sdkmath "cosmossdk.io/math"
 
 	"github.com/cosmos/cosmos-sdk/codec"
@@ -48,6 +49,11 @@ func (k Keeper) Logger(ctx sdk.Context) log.Logger {
 	return ctx.Logger().With("module", fmt.Sprintf("x/%s", types.ModuleName))
 }
 
+// coin creates a coin with a given base denom and amount
+func coin(denom string, amount int64) sdk.Coin {
+	return sdk.NewInt64Coin(denom, amount)
+}
+
 func (k Keeper) CheckBalance(ctx sdk.Context, userAddr string) bool {
 	// Get lotteryData
 	lotteryData, found := k.GetLotteryData(ctx)
@@ -55,7 +61,7 @@ func (k Keeper) CheckBalance(ctx sdk.Context, userAddr string) bool {
 		panic("LotteryData not found")
 	}
 
-	userBalance := k.bankKeeper.SpendableCoins(ctx, sdk.AccAddress(userAddr)).AmountOf("demon");
+	userBalance := k.bankKeeper.SpendableCoins(ctx, sdk.AccAddress(userAddr)).AmountOf(types.LottDenom);
 
 	return userBalance.GTE(sdkmath.NewInt(int64(lotteryData.GetMinBet())))
 }
@@ -80,7 +86,8 @@ func (k Keeper) CheckBet(ctx sdk.Context, userAddr string) bool {
 
 	// get current lottery from lotteryID
 	lotteryID := lotteryInfo.GetNextId()
-	currentLottery, found := k.GetStoredLottery(ctx, string(rune(lotteryID)))
+	newIndex := strconv.FormatUint(lotteryID, 10)
+	currentLottery, found := k.GetStoredLottery(ctx, newIndex)
 	if !found {
 		panic("Lottery not found")
 	}
@@ -91,7 +98,8 @@ func (k Keeper) CheckBet(ctx sdk.Context, userAddr string) bool {
 
 	beted := false;
 	for i := starttxID; i < lastTxID; i++ {
-		selTx, found := k.GetStoredBet(ctx, string(rune(i)))
+		iStr := strconv.FormatUint(i, 10)
+		selTx, found := k.GetStoredBet(ctx, iStr)
 		if !found {
 			panic("Tx not found")
 		}
@@ -103,4 +111,42 @@ func (k Keeper) CheckBet(ctx sdk.Context, userAddr string) bool {
 	}
 
 	return beted
+}
+
+func (k Keeper) SaveBet(ctx sdk.Context, userAddr string, betAmt int64) (*types.MsgDoBetResponse, error) {
+	// save bet info
+	betInfo, found := k.GetBetInfo(ctx)
+	if !found {
+		panic("BetInfo not found")
+	}
+
+	newIndex := strconv.FormatUint(betInfo.BetId, 10)
+	storedBet := types.StoredBet{
+		Index: newIndex,
+		UserAddr: userAddr,
+		BetAmount: betAmt,
+	}
+	k.SetStoredBet(ctx, storedBet)
+
+	// update betID
+	betInfo.BetId++
+
+	// update lottery info
+	lotteryInfo, found := k.GetLotteryInfo(ctx)
+	if !found {
+		panic("LotteryInfo not found")
+	}
+	lotteryInfo.NextOrder++
+
+	// transfertoken
+	if err := k.bankKeeper.SendCoinsFromAccountToModule(
+		ctx, sdk.AccAddress(userAddr), types.ModuleName, sdk.NewCoins(sdk.NewCoin(types.LottDenom, sdkmath.NewInt(betAmt)))); err != nil {
+		return &types.MsgDoBetResponse{
+			BetOrder: newIndex,
+		}, err
+	}
+
+	return &types.MsgDoBetResponse{
+		BetOrder: newIndex,
+	}, nil
 }
