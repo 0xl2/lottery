@@ -507,6 +507,7 @@ func New(
 		keys[lotterymoduletypes.StoreKey],
 		keys[lotterymoduletypes.MemStoreKey],
 		app.GetSubspace(lotterymoduletypes.ModuleName),
+		app.BankKeeper,
 	)
 	lotteryModule := lotterymodule.NewAppModule(appCodec, app.LotteryKeeper, app.AccountKeeper, app.BankKeeper)
 

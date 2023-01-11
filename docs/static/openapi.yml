@@ -44697,7 +44697,7 @@ paths:
                 properties:
                   betId:
                     type: string
-                    format: uint64
+                    format: int64
         default:
           description: An unexpected error response.
           schema:
@@ -44733,13 +44733,13 @@ paths:
                 properties:
                   minBet:
                     type: string
-                    format: uint64
+                    format: int64
                   maxBet:
                     type: string
-                    format: uint64
+                    format: int64
                   fee:
                     type: string
-                    format: uint64
+                    format: int64
         default:
           description: An unexpected error response.
           schema:
@@ -44775,10 +44775,10 @@ paths:
                 properties:
                   nextId:
                     type: string
-                    format: uint64
+                    format: int64
                   nextOrder:
                     type: string
-                    format: uint64
+                    format: int64
         default:
           description: An unexpected error response.
           schema:
@@ -44856,7 +44856,7 @@ paths:
                       type: string
                     betAmount:
                       type: string
-                      format: uint64
+                      format: int64
               pagination:
                 type: object
                 properties:
@@ -44981,7 +44981,7 @@ paths:
                     type: string
                   betAmount:
                     type: string
-                    format: uint64
+                    format: int64
         default:
           description: An unexpected error response.
           schema:
@@ -45028,10 +45028,13 @@ paths:
                       type: string
                     winIndex:
                       type: string
-                      format: uint64
+                      format: int64
                     startTxInd:
                       type: string
-                      format: uint64
+                      format: int64
+                    totalAmt:
+                      type: string
+                      format: int64
               pagination:
                 type: object
                 properties:
@@ -45156,10 +45159,13 @@ paths:
                     type: string
                   winIndex:
                     type: string
-                    format: uint64
+                    format: int64
                   startTxInd:
                     type: string
-                    format: uint64
+                    format: int64
+                  totalAmt:
+                    type: string
+                    format: int64
         default:
           description: An unexpected error response.
           schema:
@@ -74743,28 +74749,28 @@ definitions:
     properties:
       betId:
         type: string
-        format: uint64
+        format: int64
   naruto0913.lottery.lottery.LotteryData:
     type: object
     properties:
       minBet:
         type: string
-        format: uint64
+        format: int64
       maxBet:
         type: string
-        format: uint64
+        format: int64
       fee:
         type: string
-        format: uint64
+        format: int64
   naruto0913.lottery.lottery.LotteryInfo:
     type: object
     properties:
       nextId:
         type: string
-        format: uint64
+        format: int64
       nextOrder:
         type: string
-        format: uint64
+        format: int64
   naruto0913.lottery.lottery.MsgDoBetResponse:
     type: object
     properties:
@@ -74787,7 +74793,7 @@ definitions:
               type: string
             betAmount:
               type: string
-              format: uint64
+              format: int64
       pagination:
         type: object
         properties:
@@ -74828,10 +74834,13 @@ definitions:
               type: string
             winIndex:
               type: string
-              format: uint64
+              format: int64
             startTxInd:
               type: string
-              format: uint64
+              format: int64
+            totalAmt:
+              type: string
+              format: int64
       pagination:
         type: object
         properties:
@@ -74866,7 +74875,7 @@ definitions:
         properties:
           betId:
             type: string
-            format: uint64
+            format: int64
   naruto0913.lottery.lottery.QueryGetLotteryDataResponse:
     type: object
     properties:
@@ -74875,13 +74884,13 @@ definitions:
         properties:
           minBet:
             type: string
-            format: uint64
+            format: int64
           maxBet:
             type: string
-            format: uint64
+            format: int64
           fee:
             type: string
-            format: uint64
+            format: int64
   naruto0913.lottery.lottery.QueryGetLotteryInfoResponse:
     type: object
     properties:
@@ -74890,10 +74899,10 @@ definitions:
         properties:
           nextId:
             type: string
-            format: uint64
+            format: int64
           nextOrder:
             type: string
-            format: uint64
+            format: int64
   naruto0913.lottery.lottery.QueryGetStoredBetResponse:
     type: object
     properties:
@@ -74906,7 +74915,7 @@ definitions:
             type: string
           betAmount:
             type: string
-            format: uint64
+            format: int64
   naruto0913.lottery.lottery.QueryGetStoredLotteryResponse:
     type: object
     properties:
@@ -74919,10 +74928,13 @@ definitions:
             type: string
           winIndex:
             type: string
-            format: uint64
+            format: int64
           startTxInd:
             type: string
-            format: uint64
+            format: int64
+          totalAmt:
+            type: string
+            format: int64
   naruto0913.lottery.lottery.QueryParamsResponse:
     type: object
     properties:
@@ -74939,7 +74951,7 @@ definitions:
         type: string
       betAmount:
         type: string
-        format: uint64
+        format: int64
   naruto0913.lottery.lottery.StoredLottery:
     type: object
     properties:
@@ -74949,7 +74961,10 @@ definitions:
         type: string
       winIndex:
         type: string
-        format: uint64
+        format: int64
       startTxInd:
         type: string
-        format: uint64
+        format: int64
+      totalAmt:
+        type: string
+        format: int64

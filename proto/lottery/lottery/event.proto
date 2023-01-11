@@ -1,0 +1,19 @@
+syntax = "proto3";
+package naruto0913.lottery.lottery;
+
+option go_package = "github.com/naruto0913/lottery/x/lottery/types";
+
+message DoBet {
+    int64 lotteryID = 1;
+    int64 betID = 2;
+    string userAddr = 3;
+    int64 betAmount = 4;
+
+}
+
+message FinishLottery {
+    int64 lotteryID = 1;
+    int64 winnerInd = 2;
+    string winner = 3;
+
+}

@@ -49,6 +49,10 @@ func (k Keeper) Logger(ctx sdk.Context) log.Logger {
 	return ctx.Logger().With("module", fmt.Sprintf("x/%s", types.ModuleName))
 }
 
+func (k Keeper) getWinner(ctx sdk.Context, txCnt int64) (int64, error) {
+	return 1, nil
+}
+
 // function to check if beter has sufficient balance
 func (k Keeper) CheckBalance(ctx sdk.Context, userAddr string) (bool, error) {
 	// Get lotteryData
@@ -119,23 +123,14 @@ func (k Keeper) SaveBet(ctx sdk.Context, userAddr string, betAmt int64) (*types.
 		return nil, types.ErrBetInfo
 	}
 
-	newIndex := strconv.FormatInt(betInfo.BetId, 10)
+	betID := betInfo.GetBetId()
+	newIndex := strconv.FormatInt(betID, 10)
 	storedBet := types.StoredBet{
 		Index: newIndex,
 		UserAddr: userAddr,
 		BetAmount: betAmt,
 	}
 	k.SetStoredBet(ctx, storedBet)
-
-	// update betID
-	betInfo.BetId++
-
-	// update lottery info
-	lotteryInfo, found := k.GetLotteryInfo(ctx)
-	if !found {
-		return nil, types.ErrLotteryInfo
-	}
-	lotteryInfo.NextOrder++
 
 	// transfertoken
 	if err := k.bankKeeper.SendCoinsFromAccountToModule(
@@ -144,6 +139,35 @@ func (k Keeper) SaveBet(ctx sdk.Context, userAddr string, betAmt int64) (*types.
 			BetOrder: newIndex,
 		}, err
 	}
+
+	// get lottery info
+	lotteryInfo, found := k.GetLotteryInfo(ctx)
+	if !found {
+		return nil, types.ErrLotteryInfo
+	}
+
+	ctx.EventManager().EmitTypedEvent(&types.DoBet{
+		LotteryID: lotteryInfo.GetNextId(),
+		BetID: betID,
+		UserAddr: userAddr,
+		BetAmount: betAmt,
+	})
+
+	// get current lottery
+	newIndex = strconv.FormatInt(lotteryInfo.GetNextId(), 10)
+	currentLottery, found := k.GetStoredLottery(ctx, newIndex)
+	if !found {
+		return nil, types.ErrLottery
+	}
+	
+	// update current lottery totalAmt
+	currentLottery.TotalAmt += betAmt
+
+	// update lottery info
+	lotteryInfo.NextOrder++
+
+	// update betID
+	betInfo.BetId++
 
 	return &types.MsgDoBetResponse{
 		BetOrder: newIndex,
@@ -168,13 +192,57 @@ func (k Keeper) SetWinner(ctx sdk.Context) (error) {
 
 		// get tx count
 		txCnt := lotteryInfo.GetNextOrder()
+
 		// complete lottery if tx count is over 10
 		if txCnt >= 10 {
 			starttxID := currentLottery.GetStartTxInd()
-			lastTxID := starttxID + lotteryInfo.GetNextOrder()
-			for i := starttxID; i < lastTxID; i++ {
-				
+
+			// get winner and set winner in lottery
+			winIndex, err := k.getWinner(ctx, txCnt)
+			if err != nil {
+				return err
 			}
+
+			iStr := strconv.FormatInt(starttxID + winIndex, 10)
+			selTx, found := k.GetStoredBet(ctx, iStr)
+			if !found {
+				return types.ErrBetTx
+			}
+
+			// update current lottery info
+			currentLottery.WinIndex = winIndex
+			currentLottery.Winner = selTx.GetUserAddr()
+
+			// Get lotteryData
+			lotteryData, found := k.GetLotteryData(ctx)
+			if !found {
+				return types.ErrLotteryData
+			}
+
+			// send token to winner
+			totalAmt := currentLottery.GetTotalAmt() - lotteryData.GetFee()
+			if err = k.bankKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, sdk.AccAddress(currentLottery.Winner), sdk.NewCoins(sdk.NewCoin(types.LottDenom, sdkmath.NewInt(totalAmt)))); err != nil {
+				return err
+			}
+
+			// get bet info
+			betInfo, found := k.GetBetInfo(ctx)
+			if !found {
+				return types.ErrBetInfo
+			}
+			// add new lottery
+			newIndex := strconv.FormatInt(lotteryID, 10)
+			storedLottery := types.StoredLottery {
+				Index: newIndex,
+				Winner: "",
+				WinIndex: 0,
+				StartTxInd: betInfo.GetBetId(),
+			}
+			k.SetStoredLottery(ctx, storedLottery)
+
+			// update lottery info
+			lotteryInfo.NextId++
+			lotteryInfo.NextOrder = 0
 		}
 	}
 

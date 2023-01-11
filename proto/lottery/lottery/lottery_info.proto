@@ -6,6 +6,5 @@ option go_package = "github.com/naruto0913/lottery/x/lottery/types";
 message LotteryInfo {
   int64 nextId = 1; 
   int64 nextOrder = 2;
-  int64 totalAmt = 3;
   
 }

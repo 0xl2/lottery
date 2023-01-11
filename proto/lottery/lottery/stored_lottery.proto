@@ -8,6 +8,7 @@ message StoredLottery {
   string winner = 2; 
   int64 winIndex = 3; 
   int64 startTxInd = 4; 
+  int64 totalAmt = 5;
 
 }
 

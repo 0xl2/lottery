@@ -8,7 +8,7 @@ import (
 
 const (
 	// Name defines the application name of the lottery network.
-	Name = "lottery"
+	Name = "lott"
 
 	// BondDenom defines the native staking token denomination.
 	BondDenom = "lott"
