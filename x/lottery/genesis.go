@@ -8,10 +8,6 @@ import (
 
 // InitGenesis initializes the module's state from a provided genesis state.
 func InitGenesis(ctx sdk.Context, k keeper.Keeper, genState types.GenesisState) {
-	// Set if defined
-	if genState.LotteryInfo != nil {
-		k.SetLotteryInfo(ctx, *genState.LotteryInfo)
-	}
 	// Set all the storedLottery
 	for _, elem := range genState.StoredLotteryList {
 		k.SetStoredLottery(ctx, elem)
@@ -20,27 +16,19 @@ func InitGenesis(ctx sdk.Context, k keeper.Keeper, genState types.GenesisState) 
 	for _, elem := range genState.StoredBetList {
 		k.SetStoredBet(ctx, elem)
 	}
-	// Set if defined
-	if genState.BetInfo != nil {
-		k.SetBetInfo(ctx, *genState.BetInfo)
-	}
-	// Set if defined
-	if genState.LotteryData != nil {
-		k.SetLotteryData(ctx, *genState.LotteryData)
-	}
 	// start first lottery
-	storedLottery := types.StoredLottery {
+	k.SetStoredLottery(ctx, types.StoredLottery {
 		Index: "0",
 		Winner: "",
 		WinIndex: 0,
 		StartTxInd: 0,
-	}
-	k.SetStoredLottery(ctx, storedLottery)
-	// update lotteryID
-	lotteryInfo, found := k.GetLotteryInfo(ctx)
-	if found {
-		lotteryInfo.NextId++
-	}
+	})
+	// Set if defined
+	k.SetLotteryInfo(ctx, types.LotteryInfo{NextId: 1, NextOrder: 0})
+	// Set if defined
+	k.SetBetInfo(ctx, *genState.BetInfo)
+	// Set if defined
+	k.SetLotteryData(ctx, *genState.LotteryData)
 	// this line is used by starport scaffolding # genesis/module/init
 	k.SetParams(ctx, genState.Params)
 }
