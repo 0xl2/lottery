@@ -27,8 +27,12 @@ func InitGenesis(ctx sdk.Context, k keeper.Keeper, genState types.GenesisState) 
 	k.SetLotteryInfo(ctx, types.LotteryInfo{NextId: 1, NextOrder: 0})
 	// Set if defined
 	k.SetBetInfo(ctx, *genState.BetInfo)
-	// Set if defined
-	k.SetLotteryData(ctx, *genState.LotteryData)
+	// Set genesis lottery data
+	k.SetLotteryData(ctx, types.LotteryData{
+		MinBet: 1,
+		MaxBet: 10,
+		Fee: 3,
+	})
 	// this line is used by starport scaffolding # genesis/module/init
 	k.SetParams(ctx, genState.Params)
 }

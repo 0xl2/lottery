@@ -2,8 +2,46 @@ version: 1
 accounts:
   - name: alice
     coins: ["20000token", "200000000stake"]
-  - name: bob
-    coins: ["10000token", "100000000stake"]
+  - name: user1
+    coins: ["1token", "100000000stake"]
+  - name: user2
+    coins: ["2token", "100000000stake"]
+  - name: user3
+    coins: ["3token", "100000000stake"]
+  - name: user4
+    coins: ["4token", "100000000stake"]
+  - name: user5
+    coins: ["5token", "100000000stake"]
+  - name: user6
+    coins: ["6token", "100000000stake"]
+  - name: user7
+    coins: ["7token", "100000000stake"]
+  - name: user8
+    coins: ["8token", "100000000stake"]
+  - name: user9
+    coins: ["9token", "100000000stake"]
+  - name: user10
+    coins: ["10token", "100000000stake"]
+  - name: user1
+    coins: ["11token", "100000000stake"]
+  - name: user12
+    coins: ["12token", "100000000stake"]
+  - name: user13
+    coins: ["13token", "100000000stake"]
+  - name: user14
+    coins: ["14token", "100000000stake"]
+  - name: user15
+    coins: ["15token", "100000000stake"]
+  - name: user16
+    coins: ["16token", "100000000stake"]
+  - name: user17
+    coins: ["17token", "100000000stake"]
+  - name: user18
+    coins: ["18token", "100000000stake"]
+  - name: user19
+    coins: ["19token", "100000000stake"]
+  - name: user20
+    coins: ["20token", "100000000stake"]
 validators:
   - name: alice
     bonded: "100000000stake"
@@ -14,6 +52,6 @@ client:
     path: "ts-client"
   vuex:
     path: "vue/src/store"
+  name: user1
 faucet:
-  name: bob
   coins: ["5token", "100000stake"]
