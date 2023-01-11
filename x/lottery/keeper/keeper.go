@@ -49,11 +49,7 @@ func (k Keeper) Logger(ctx sdk.Context) log.Logger {
 	return ctx.Logger().With("module", fmt.Sprintf("x/%s", types.ModuleName))
 }
 
-// coin creates a coin with a given base denom and amount
-func coin(denom string, amount int64) sdk.Coin {
-	return sdk.NewInt64Coin(denom, amount)
-}
-
+// function to check if beter has sufficient balance
 func (k Keeper) CheckBalance(ctx sdk.Context, userAddr string) bool {
 	// Get lotteryData
 	lotteryData, found := k.GetLotteryData(ctx)
@@ -66,6 +62,7 @@ func (k Keeper) CheckBalance(ctx sdk.Context, userAddr string) bool {
 	return userBalance.GTE(sdkmath.NewInt(int64(lotteryData.GetMinBet())))
 }
 
+// function to check betAmount is in valid range
 func (k Keeper) CheckRange(ctx sdk.Context, betAmt int64) bool {
 	// Get lotteryData
 	lotteryData, found := k.GetLotteryData(ctx)
@@ -77,6 +74,7 @@ func (k Keeper) CheckRange(ctx sdk.Context, betAmt int64) bool {
 	return betAmt >= lotteryData.GetMinBet() && betAmt <= lotteryData.GetMaxBet()
 }
 
+// function to check if beter bettted or not
 func (k Keeper) CheckBet(ctx sdk.Context, userAddr string) bool {
 	// Get lotteryInfo
 	lotteryInfo, found := k.GetLotteryInfo(ctx)
@@ -113,6 +111,7 @@ func (k Keeper) CheckBet(ctx sdk.Context, userAddr string) bool {
 	return beted
 }
 
+// function to save the bet tx and update lottery, bet
 func (k Keeper) SaveBet(ctx sdk.Context, userAddr string, betAmt int64) (*types.MsgDoBetResponse, error) {
 	// save bet info
 	betInfo, found := k.GetBetInfo(ctx)
@@ -149,4 +148,8 @@ func (k Keeper) SaveBet(ctx sdk.Context, userAddr string, betAmt int64) (*types.
 	return &types.MsgDoBetResponse{
 		BetOrder: newIndex,
 	}, nil
+}
+
+func (k Keeper) SetWinner(ctx sdk.Context) {
+	
 }
