@@ -11,22 +11,36 @@ func (k msgServer) DoBet(goCtx context.Context, msg *types.MsgDoBet) (*types.Msg
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	// check user has bet already
-	betted := k.Keeper.CheckBet(ctx, msg.Creator)
+	betted, err := k.Keeper.CheckBet(ctx, msg.Creator)
+	if err != nil {
+		return nil, err
+	}
 	if betted {
-		panic("You can bet only 1 time")
+		return nil, types.ErrAlreadyBet
 	}
 
 	// check user has sufficient balance
-	hasBalance := k.Keeper.CheckBalance(ctx, msg.Creator)
+	hasBalance, err := k.Keeper.CheckBalance(ctx, msg.Creator)
+	if err != nil {
+		return nil, err
+	}
 	if !hasBalance {
-		panic("Insufficient balance")
+		return nil, types.ErrInsufficient
 	}
 
 	// check bet amount is in valid range
-	validRange := k.Keeper.CheckRange(ctx, msg.BetAmount)
+	validRange, err := k.Keeper.CheckRange(ctx, msg.BetAmount)
+	if err != nil {
+		return nil, err
+	}
 	if !validRange {
-		panic("Invalid amount")
+		return nil, types.ErrInvalidRange
 	}
 
-	return &types.MsgDoBetResponse{}, nil
+	respBet, err := k.Keeper.SaveBet(ctx, msg.Creator, msg.BetAmount)
+	if err != nil {
+		return nil, err
+	}
+
+	return respBet, nil
 }
