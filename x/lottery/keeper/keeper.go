@@ -59,3 +59,48 @@ func (k Keeper) CheckBalance(ctx sdk.Context, userAddr string) bool {
 
 	return userBalance.GTE(sdkmath.NewInt(int64(lotteryData.GetMinBet())))
 }
+
+func (k Keeper) CheckRange(ctx sdk.Context, betAmt uint64) bool {
+	// Get lotteryData
+	lotteryData, found := k.GetLotteryData(ctx)
+	if !found {
+		panic("LotteryData not found")
+	}
+
+	// check betAmt in min and max bet amount
+	return betAmt >= lotteryData.GetMinBet() && betAmt <= lotteryData.GetMaxBet()
+}
+
+func (k Keeper) CheckBet(ctx sdk.Context, userAddr string) bool {
+	// Get lotteryInfo
+	lotteryInfo, found := k.GetLotteryInfo(ctx)
+	if !found {
+		panic("LotteryInfo not found")
+	}
+
+	// get current lottery from lotteryID
+	lotteryID := lotteryInfo.GetNextId()
+	currentLottery, found := k.GetStoredLottery(ctx, string(rune(lotteryID)))
+	if !found {
+		panic("Lottery not found")
+	}
+
+	// check user beted already
+	starttxID := currentLottery.GetStartTxInd()
+	lastTxID := starttxID + lotteryInfo.GetNextOrder()
+
+	beted := false;
+	for i := starttxID; i < lastTxID; i++ {
+		selTx, found := k.GetStoredBet(ctx, string(rune(i)))
+		if !found {
+			panic("Tx not found")
+		}
+
+		if selTx.GetUserAddr() == userAddr {
+			beted = true
+			break
+		}
+	}
+
+	return beted
+}
